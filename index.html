@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <title>性格生成</title>
+</head>
+<body>
+  <div id="app">
+    <p>キャラの名前（オプション）</p>
+    <input type="text" v-model="charaName">
+    <p>性格の生成数</p>
+    <select v-model="generateNum">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+    </select>
+    <button @click="generatePersonal()">生成する</button>
+    <p>{{ generateNum }}</p>
+    <ul>
+      <li v-for="ps in generatedList">
+        {{ ps }}
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
+
+<script type="module">
+import { mainPersonal, subPersonal } from './list.js'
+
+// const decidePersonal = (personalList) => {
+//   const personalIndex = Math.round(Math.random() * personalList.length)
+//   return personalList[personalIndex]
+// }
+var vm = new Vue({
+  el: "#app",
+  data: {
+    generateNum: 0,
+    charaName: "",
+    generatedList: []
+  },
+  methods: {
+    generatePersonal() {
+      this.generatedList = []
+      for (let i=0; i<this.generateNum; i++) {
+        const mainPs = this.decidePersonal(mainPersonal)
+        const subPs = this.decidePersonal(subPersonal)
+        const ans = `${this.charaName} ${mainPs} ${subPs}`
+        this.generatedList.push(ans)
+      }
+    },
+    decidePersonal(personalList) {
+      const personalIndex = Math.round(Math.random() * personalList.length)
+
+      return personalList[personalIndex]
+    }
+  }
+})
+
+</script>
