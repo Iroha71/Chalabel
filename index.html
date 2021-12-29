@@ -11,6 +11,19 @@
   <div id="app">
     <p>キャラの名前（オプション）</p>
     <input type="text" v-model="charaName">
+    <div>
+      <select v-model="type1">
+        <option value="main">メイン</option>
+        <option value="sub">サブ</option>
+      </select>
+      ×
+      <select v-model="type2" name="" id="">
+        <option value="main">メイン</option>
+        <option value="sub">サブ</option>
+      </select>
+    </div>
+    
+
     <p>性格の生成数</p>
     <select v-model="generateNum">
       <option value="10">10</option>
@@ -38,17 +51,23 @@ import { mainPersonal, subPersonal } from './list.js'
 var vm = new Vue({
   el: "#app",
   data: {
-    generateNum: 0,
+    generateNum: 10,
     charaName: "",
-    generatedList: []
+    type1: "main",
+    type2: "sub",
+    generatedList: [],
+    age: { min: 0, max: 100 },
   },
   methods: {
     generatePersonal() {
       this.generatedList = []
       for (let i=0; i<this.generateNum; i++) {
-        const mainPs = this.decidePersonal(mainPersonal)
-        const subPs = this.decidePersonal(subPersonal)
-        const ans = `${this.charaName} ${mainPs} ${subPs}`
+        const mainPsList = this.type1 == "main" ? mainPersonal : subPersonal
+        const subPsList = this.type2 == "main" ? mainPersonal : subPersonal
+        const mainPs = this.decidePersonal(mainPsList)
+        const subPs = this.decidePersonal(subPsList)
+        const age = this.generateAge()
+        const ans = `${this.charaName} ${mainPs} ${subPs} ${age}歳`
         this.generatedList.push(ans)
       }
     },
@@ -56,7 +75,12 @@ var vm = new Vue({
       const personalIndex = Math.round(Math.random() * personalList.length)
 
       return personalList[personalIndex]
-    }
+    },
+    generateAge() {
+      const age = Math.round(Math.random() * this.age.max) + this.age.min
+      console.log(age)
+      return age
+    },
   }
 })
 
